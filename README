@@ -1,0 +1,107 @@
+# 🌦️ Mausam
+
+Mausam is a modern and responsive weather web application that provides real-time weather information for any city using the Open-Meteo API.
+
+Built with HTML, CSS, and JavaScript.
+
+---
+
+# 🚀 Features
+
+✅ Search weather by city  
+✅ Real-time temperature updates  
+✅ Weather conditions with icons  
+✅ Wind speed display  
+✅ Humidity display  
+✅ Responsive modern UI  
+✅ Glassmorphism design  
+✅ Completely free API integration  
+
+---
+
+# 🛠️ Tech Stack
+
+| Technology | Usage |
+|------------|------|
+| HTML5 | Structure |
+| CSS3 | Styling |
+| JavaScript | Functionality |
+| Open-Meteo API | Weather Data |
+| GitHub Pages | Deployment |
+
+---
+
+# 🌐 API Used
+
+Open-Meteo Weather API:
+
+https://open-meteo.com/
+
+---
+
+# 📂 Project Structure
+
+Mausam/
+│
+├── index.html
+├── style.css
+├── script.js
+└── README.md
+
+---
+
+# ⚡ How To Run Locally
+
+1. Download or clone this repository
+
+2. Open the project folder
+
+3. Run `index.html` in your browser
+
+---
+
+# 🌍 Deployment
+
+This project can be deployed for free using:
+
+- GitHub Pages
+- Netlify
+- Vercel
+
+---
+
+# 📸 Preview
+
+Modern weather dashboard with:
+- live weather updates
+- responsive layout
+- animated weather icons
+- clean UI
+
+---
+
+# 🔮 Future Updates (v2.0)
+
+Planned features:
+
+- 7-day weather forecast
+- Dark/Light mode
+- Auto location detection
+- PWA support
+- Offline mode
+- AQI integration
+- AI Weather Assistant
+- Weather animations
+
+---
+
+# 👨‍💻 Developer
+
+Developed by Nihal RAJ ⚡  
+Project Name: Mausam 🌦️
+
+---
+
+# 📜 License
+
+This project is open-source and free to use.
