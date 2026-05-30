@@ -2,62 +2,243 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mausam 🌦️</title>
-
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MausamAI | Intelligent Weather Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body>
+<body class="theme-sunny">
 
-    <div class="container">
-
-        <h1 class="app-title">🌦️ Mausam</h1>
-        <p class="subtitle">Live Weather Forecast</p>
-
-        <div class="search-box">
-            <input type="text" id="cityInput" placeholder="Enter city name..." />
-
-            <button onclick="getWeather()">
-                Search
-            </button>
+    <!-- Thunder Startup Animation Overlay -->
+    <div id="startupOverlay" class="startup-screen">
+        <div class="lightning-flash"></div>
+        <div class="logo-reveal">
+            <h1 class="anim-logo">
+                <img src="assets/logo.png" alt="MausamAI" style="height: 50px; vertical-align: middle;"
+                    onerror="this.src='assets/icons/icon-192.png'">
+                MausamAI
+            </h1>
+            <p class="anim-tagline">Weather • Agriculture • Health • Sports • Photography</p>
         </div>
-
-        <div class="weather-card">
-
-            <h2 id="cityName">City Name</h2>
-
-            <div class="weather-icon">
-                ☀️
-            </div>
-
-            <h1 id="temperature">--°C</h1>
-
-            <p id="condition">
-                Weather Condition
-            </p>
-
-            <div class="details">
-
-                <div class="detail-box">
-                    <p>💨 Wind</p>
-                    <span id="wind">-- km/h</span>
-                </div>
-
-                <div class="detail-box">
-                    <p>💧 Humidity</p>
-                    <span id="humidity">--%</span>
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
 
-    <script src="script.js"></script>
+    <!-- Weather Background Animation Canvas -->
+    <div id="animationContainer" class="weather-anim-bg"></div>
 
+    <!-- Main App Layout -->
+    <div class="app-layout" id="mainApp" style="display: none;">
+
+        <!-- COLUMN 1: Sidebar Navigation Component -->
+        <aside class="sidebar glass-panel">
+            <div class="brand">
+                <img src="assets/logo.png" alt="MausamAI Logo" class="brand-logo"
+                    onerror="this.src='assets/icons/icon-192.png'">
+                <h2>MausamAI</h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active" data-target="dashboardView"><i class="fa-solid fa-house"></i>
+                    Dashboard</a>
+                <a href="#" class="nav-link" data-target="agricultureView"><i class="fa-solid fa-wheat-awn"></i>
+                    Agriculture</a>
+                <a href="#" class="nav-link" data-target="healthView"><i class="fa-solid fa-heart-pulse"></i> Health</a>
+                <a href="#" class="nav-link" data-target="sportsView"><i class="fa-solid fa-person-running"></i>
+                    Sports</a>
+                <a href="#" class="nav-link" data-target="photographyView"><i class="fa-solid fa-camera"></i>
+                    Photography</a>
+            </nav>
+            <div class="pwa-status" id="pwaStatusCard">
+                <span id="networkStatus"><i class="fa-solid fa-wifi"></i> Online</span>
+                <button id="installBtn" style="display: none;" class="btn-primary tiny"><i
+                        class="fa-solid fa-download"></i> Install App</button>
+            </div>
+        </aside>
+
+        <!-- COLUMN 2: Main Workspace Area (Pages) -->
+        <main class="main-content">
+            <!-- Top Controls Dashboard Bar -->
+            <header class="top-bar">
+                <div class="location-detect-wrapper">
+                    <button id="getLocationBtn" class="btn-icon">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </button>
+                    <span id="geoCoords" class="coordinates-tag">Auto-Detect</span>
+                </div>
+                <div class="live-time-badge">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="liveClock">--:--:--</span>
+                </div>
+                <div class="search-container glass-panel">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="cityInput" placeholder="Search City, District, State..." autocomplete="off">
+                    <div id="suggestionsBox" class="suggestions-dropdown glass-panel" style="display: none;"></div>
+                    <button id="searchBtn" style="display:none;">Search</button>
+                </div>
+            </header>
+
+            <!-- PAGE 1: Main Dashboard (Default) -->
+            <div id="dashboardView" class="page-view active">
+                <section class="hero-weather-board theme-dynamic-bg">
+                    <div class="hero-current">
+                        <div class="hero-main-info">
+                            <h2 id="locationName">Detecting...</h2>
+                            <p id="weatherDesc">Awaiting sync</p>
+                        </div>
+                        <div class="hero-temp">
+                            <span id="currentTemp">--</span><span class="degree-symbol">°</span>
+                        </div>
+                    </div>
+
+                    <div class="forecast-mini-cards">
+                        <div class="mini-day-card glass-panel-light"><i class="fa-solid fa-cloud-sun"></i><span
+                                class="day-name">Tomorrow</span><span class="day-temp">--°</span></div>
+                        <div class="mini-day-card glass-panel-light"><i
+                                class="fa-solid fa-cloud-showers-heavy"></i><span class="day-name">Day 3</span><span
+                                class="day-temp">--°</span></div>
+                        <div class="mini-day-card glass-panel-light"><i class="fa-solid fa-sun"></i><span
+                                class="day-name">Day 4</span><span class="day-temp">--°</span></div>
+                    </div>
+                </section>
+
+                <h3 class="section-title" style="margin-top: 2rem;">Today's Highlights</h3>
+
+                <section class="metrics-grid">
+                    <div class="highlight-card glass-panel"><span class="m-label">Feels Like</span>
+                        <div class="m-data"><i class="fa-solid fa-temperature-half indicator-icon"></i> <span
+                                id="feelsLike">--°C</span></div>
+                    </div>
+                    <div class="highlight-card glass-panel"><span class="m-label">Humidity</span>
+                        <div class="m-data"><i class="fa-solid fa-droplet indicator-icon"></i> <span
+                                id="humidityVal">--%</span></div>
+                    </div>
+                    <div class="highlight-card glass-panel"><span class="m-label">Visibility</span>
+                        <div class="m-data"><i class="fa-solid fa-eye indicator-icon"></i> <span id="visibilityVal">--
+                                km</span></div>
+                    </div>
+                    <div class="highlight-card glass-panel"><span class="m-label">Ultraviolet</span>
+                        <div class="m-data"><i class="fa-solid fa-sun indicator-icon"></i> <span id="uvVal">--</span>
+                            <small id="uvDesc">--</small>
+                        </div>
+                    </div>
+                    <div class="highlight-card glass-panel"><span class="m-label">Wind Speed</span>
+                        <div class="m-data"><i class="fa-solid fa-wind indicator-icon"></i> <span id="windVal">--
+                                km/h</span></div>
+                    </div>
+                    <div class="highlight-card glass-panel"><span class="m-label">Air Quality</span>
+                        <div class="m-data"><i class="fa-solid fa-leaf indicator-icon"></i> <span id="aqiVal">--</span>
+                            <small id="aqiDesc">--</small>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="chart-card glass-panel" style="margin-top: 2rem;">
+                    <div class="chart-header">
+                        <h3 class="section-title">24-Hour Analytics Trend</h3>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </section>
+            </div>
+
+            <!-- PAGE 2: Agriculture View -->
+            <div id="agricultureView" class="page-view">
+                <div class="domain-header">
+                    <h2><i class="fa-solid fa-wheat-awn"></i> Agriculture Intelligence</h2>
+                    <p>Crop-specific irrigation, heat stress, and farming suitability insights based on live telemetry.
+                    </p>
+                </div>
+                <section class="assistant-card glass-panel" id="agCard">
+                    <div class="card-title-row">
+                        <h4>Farming Optimization Matrix</h4>
+                        <div class="score-badge" id="agScore">--/100</div>
+                    </div>
+                    <ul class="insight-list" id="agInsights"></ul>
+                </section>
+            </div>
+
+            <!-- PAGE 3: Health View -->
+            <div id="healthView" class="page-view">
+                <div class="domain-header">
+                    <h2><i class="fa-solid fa-heart-pulse"></i> Health & Exposure</h2>
+                    <p>Air quality analysis, hydration requirements, and UV risk assessments.</p>
+                </div>
+                <section class="assistant-card glass-panel" id="healthCard">
+                    <div class="card-title-row">
+                        <h4>Safety Assessment</h4>
+                        <div class="score-badge" id="healthScore">--/100</div>
+                    </div>
+                    <ul class="insight-list" id="healthInsights"></ul>
+                </section>
+            </div>
+
+            <!-- PAGE 4: Sports View -->
+            <div id="sportsView" class="page-view">
+                <div class="domain-header">
+                    <h2><i class="fa-solid fa-person-running"></i> Sports Activity</h2>
+                    <p>Suitability scores for outdoor physical exertions.</p>
+                </div>
+                <section class="assistant-card glass-panel" id="sportsCard">
+                    <div class="card-title-row">
+                        <h4>Match & Activity Index</h4>
+                    </div>
+                    <ul class="insight-list" id="sportsInsights"></ul>
+                </section>
+            </div>
+
+            <!-- PAGE 5: Photography View -->
+            <div id="photographyView" class="page-view">
+                <div class="domain-header">
+                    <h2><i class="fa-solid fa-camera"></i> Photography Analytics</h2>
+                    <p>Lighting conditions, haze tracking, and golden hour windows.</p>
+                </div>
+                <section class="assistant-card glass-panel" id="photoCard">
+                    <div class="sun-timings-grid">
+                        <div class="timing-box"><i class="fa-solid fa-arrow-up-from-water-pump"></i> Sunrise<br><b
+                                id="sunriseTime">--:--</b></div>
+                        <div class="timing-box"><i class="fa-solid fa-arrow-down-to-water"></i> Sunset<br><b
+                                id="sunsetTime">--:--</b></div>
+                    </div>
+                    <ul class="insight-list" id="photoInsights"></ul>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating AI Chatbot Assistant -->
+    <div class="chatbot-wrapper">
+        <button id="chatToggleBtn" class="chat-trigger-btn"><i class="fa-solid fa-message"></i></button>
+        <div id="chatWindow" class="chat-window glass-panel" style="display: none;">
+            <div class="chat-header">
+                <div class="bot-info">
+                    <img src="assets/icons/icon-192.png" alt="Bot" class="bot-avatar"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/4712/4712027.png'">
+                    <div>
+                        <h4>MausamAI</h4>
+                        <small>Intelligence Engine</small>
+                    </div>
+                </div>
+                <button id="closeChatBtn" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="chatHistory" class="chat-body">
+                <div class="bot-msg">System operational. Ask me questions about weather, agriculture inputs, matches,
+                    clothing choices, or golden hour parameters.</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask MausamAI...">
+                <button id="sendChatBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orchestration Entry Script -->
+    <script src="main.js" type="module"></script>
+
+    <!-- PWA Installation & Service Worker Core -->
+    <script src="script.js"></script>
 </body>
 
 </html>
